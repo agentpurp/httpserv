@@ -108,7 +108,7 @@ void serverRun()
     int clientsocket;
     pthread_t thread;
 
-    printf("swss is running \n");
+    printf("httpserv is running \n");
     while(1)
     {
         clientsocket = acceptConnection();
