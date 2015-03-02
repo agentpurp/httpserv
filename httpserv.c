@@ -109,9 +109,11 @@ void unimplementedrequest(int client)
 
     sprintf(buffer, "HTTP/1.0 501  Not Implemented\n");
     write(client, buffer, strlen(buffer));
-    strcpy(buffer, "Content-Type: text/html\n");
-    write(client, buffer, strlen(buffer));
     sprintf(buffer, "Server: httpserv %s \n", SERVERVERSION);
+    write(client, buffer, strlen(buffer));
+    sprintf(buffer, "Date: %s \n", timeCalc(30, buffer));
+    write(client, buffer, strlen(buffer));
+    strcpy(buffer, "Content-Type: text/html\n");
     write(client, buffer, strlen(buffer));
     sprintf(buffer, "\n\n");
     write(client, buffer, strlen(buffer));
@@ -126,15 +128,17 @@ void filenotfoundrequest(int client)
     memset(buffer, 0, sizeof(buffer));
 
     sprintf(buffer, "HTTP/1.0 404 NOT FOUND\n");
-    send(client, buffer, strlen(buffer),0);
-    sprintf(buffer, "Content-Type: text/html\n");
-    send(client, buffer, strlen(buffer),0);
+    write(client, buffer, strlen(buffer));
     sprintf(buffer, "Server: httpserv %s \n", SERVERVERSION);
-    send(client, buffer, strlen(buffer),0);
+    write(client, buffer, strlen(buffer));
+    sprintf(buffer, "Date: %s \n", timeCalc(30, buffer));
+    write(client, buffer, strlen(buffer));
+    sprintf(buffer, "Content-Type: text/html\n");
+    write(client, buffer, strlen(buffer));
     sprintf(buffer, "\n\n");
-    send(client, buffer, strlen(buffer),0);
+    write(client, buffer, strlen(buffer));
     sprintf(buffer, "<html><head></head><body><h1>404 - FILE NOT FOUND</h1></body></html>\n");
-    send(client, buffer, strlen(buffer),0);
+    write(client, buffer, strlen(buffer));
 
 }
 
@@ -180,6 +184,8 @@ void implementedrequest(int clientsocket, char *path)
         sprintf(buffer, "HTTP/1.1 200 OK\n");
         write(clientsocket, buffer, strlen(buffer));
         sprintf(buffer, "Server: httpserv %s \n", SERVERVERSION);
+        write(clientsocket, buffer, strlen(buffer));
+        sprintf(buffer, "Date: %s \n", timeCalc(30, buffer));
         write(clientsocket, buffer, strlen(buffer));
         sprintf(buffer, "Content-Length: %ld\n", len);
         write(clientsocket, buffer, strlen(buffer));
