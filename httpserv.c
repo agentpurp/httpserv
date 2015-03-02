@@ -16,6 +16,9 @@
 #define BUFFERSIZE 4096
 
 char *fileextensions [11][2] = {
+  {"html","text/html" },
+  {"htm", "text/html" },
+  {"ico", "image/x-icon"},
   {"gif", "image/gif" },
   {"jpg", "image/jpg" },
   {"jpeg","image/jpeg"},
@@ -23,10 +26,7 @@ char *fileextensions [11][2] = {
   {"ico", "image/ico" },
   {"zip", "image/zip" },
   {"gz",  "image/gz"  },
-  {"tar", "image/tar" },
-  {"htm", "text/html" },
-  {"html","text/html" },
-  {"ico", "image//x-icon"}
+  {"tar", "image/tar" }
 };
 
 
@@ -104,36 +104,36 @@ char *timeCalc(int size, char buf[]){
 
 void unimplementedrequest(int client)
 {
-    char buffer[1024];
+    char buffer[BUFFERSIZE+1];
     memset(buffer, 0, sizeof(buffer));
 
     sprintf(buffer, "HTTP/1.0 501  Not Implemented\n");
     write(client, buffer, strlen(buffer));
-    strcpy(buffer, "Content-Type: text/xml;charset=utf-8\n");
+    strcpy(buffer, "Content-Type: text/html\n");
     write(client, buffer, strlen(buffer));
     sprintf(buffer, "Server: httpserv %s \n", SERVERVERSION);
     write(client, buffer, strlen(buffer));
     sprintf(buffer, "\n\n");
     write(client, buffer, strlen(buffer));
-    sprintf(buffer, "501 - NOT IMPLEMENTED\n");
+    sprintf(buffer, "<html><head></head><body><h1>501 - NOT IMPLEMENTED</h1></body></html>\n");
     write(client, buffer, strlen(buffer));
 }
 
 
 void filenotfoundrequest(int client)
 {
-    char buffer[1024];
+    char buffer[BUFFERSIZE+1];
     memset(buffer, 0, sizeof(buffer));
 
     sprintf(buffer, "HTTP/1.0 404 NOT FOUND\n");
     send(client, buffer, strlen(buffer),0);
-    sprintf(buffer, "Content-Type: text/html;charset=utf-8\n");
+    sprintf(buffer, "Content-Type: text/html\n");
     send(client, buffer, strlen(buffer),0);
     sprintf(buffer, "Server: httpserv %s \n", SERVERVERSION);
     send(client, buffer, strlen(buffer),0);
     sprintf(buffer, "\n\n");
     send(client, buffer, strlen(buffer),0);
-    sprintf(buffer, "404 - FILE NOT FOUND\n");
+    sprintf(buffer, "<html><head></head><body><h1>404 - FILE NOT FOUND</h1></body></html>\n");
     send(client, buffer, strlen(buffer),0);
 
 }
@@ -240,7 +240,7 @@ void serverRun()
     int clientsocket;
     pthread_t thread;
 
-    printf("httpserv is running \n");
+    printf("Running: %s:%s \n", ip, port);
     while(1)
     {
         clientsocket = acceptConnection();
